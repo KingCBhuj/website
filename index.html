@@ -3,23 +3,278 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Chirag's Website</title>
+  <meta name="description"
+        content="Chirag Chande's personal corner of the internet. Ideas on business, technology, and everyday life.">
+  <title>Chirag Chande</title>
+
   <style>
-    body {
-      font-family: system-ui, sans-serif;
-      background: #f5f5f5;
-      color: #222;
-      max-width: 700px;
-      margin: 80px auto;
-      padding: 24px;
-      line-height: 1.6;
+    :root {
+      --bg: #faf9f6;
+      --text: #242824;
+      --muted: #666d65;
+      --accent: #35634b;
+      --border: #dedfd7;
+      --card: #ffffff;
     }
-    h1 { color: #2563eb; }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+                   "Segoe UI", sans-serif;
+      line-height: 1.7;
+    }
+
+    a { color: var(--accent); }
+
+    a:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 5px;
+    }
+
+    .container {
+      width: min(100% - 40px, 980px);
+      margin-inline: auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 26px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .name {
+      color: var(--text);
+      font-weight: 750;
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    nav a:hover { color: var(--accent); }
+
+    .hero { padding: 100px 0 85px; }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 18px 0 24px;
+      font-size: clamp(2.7rem, 7vw, 5rem);
+      line-height: 1.08;
+      letter-spacing: -3px;
+      max-width: 850px;
+    }
+
+    .intro {
+      max-width: 650px;
+      font-size: 1.18rem;
+      color: var(--muted);
+    }
+
+    .button {
+      display: inline-block;
+      margin-top: 22px;
+      padding: 12px 22px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .button:hover { background: #274d39; }
+
+    section {
+      padding: 55px 0;
+      border-top: 1px solid var(--border);
+      scroll-margin-top: 24px;
+    }
+
+    h2 {
+      margin: 0 0 20px;
+      font-size: 1.8rem;
+      letter-spacing: -0.8px;
+    }
+
+    .about-copy {
+      max-width: 700px;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 26px;
+    }
+
+    .card {
+      padding: 26px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .card h3 {
+      margin: 0 0 12px;
+      font-size: 1.1rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .note {
+      padding: 25px;
+      border-left: 3px solid var(--accent);
+      background: #eef1ea;
+      border-radius: 0 10px 10px 0;
+      color: var(--muted);
+    }
+
+    footer {
+      margin-top: 30px;
+      padding: 30px 0;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 640px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      nav { gap: 20px; }
+      .hero { padding: 65px 0; }
+      h1 { letter-spacing: -1.5px; }
+      .cards { grid-template-columns: 1fr; }
+      section { padding: 40px 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
   </style>
 </head>
+
 <body>
-  <h1>Hello, I'm Chirag 👋</h1>
-  <p>Welcome to my website.</p>
-  <p>I'll be sharing my ideas, interests, and projects here.</p>
+  <div class="container">
+    <header>
+      <a class="name" href="./">Chirag Chande</a>
+
+      <nav aria-label="Main navigation">
+        <a href="#about">About</a>
+        <a href="#interests">Interests</a>
+        <a href="#writing">Writing</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="hero">
+        <p class="eyebrow">A personal corner of the internet</p>
+        <h1>Curious about how things work.</h1>
+
+        <p class="intro">
+          I'm Chirag Chande. I explore business, technology,
+          and the choices that shape everyday life.
+          This is where I share what I'm learning.
+        </p>
+
+        <a class="button" href="#about">A little about me →</a>
+      </div>
+
+      <section id="about">
+        <h2>Hello, I'm Chirag.</h2>
+
+        <div class="about-copy">
+          <p>
+            Based in Bhuj, Gujarat, I'm interested in understanding
+            things beyond the headline—how businesses work,
+            what makes technology useful, and how to live
+            more thoughtfully.
+          </p>
+          <p>
+            I enjoy researching, comparing perspectives, and
+            turning complicated ideas into something clear.
+            This website is a home for those explorations.
+          </p>
+        </div>
+      </section>
+
+      <section id="interests">
+        <h2>What catches my attention</h2>
+
+        <div class="cards">
+          <article class="card">
+            <h3>Business & ideas</h3>
+            <p>
+              The companies, business models, and decisions
+              behind the products we use.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>Technology</h3>
+            <p>
+              Useful tools, thoughtful design, and technology
+              that earns its place in everyday life.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>Living well</h3>
+            <p>
+              Movement, travel, simpler habits, and exploring
+              what a good life can look like.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="writing">
+        <h2>Notes & explorations</h2>
+
+        <div class="note">
+          This space is taking shape. I'll be adding my writing,
+          observations, and interesting finds here.
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      © Chirag Chande · Bhuj, Gujarat
+    </footer>
+  </div>
 </body>
 </html>
