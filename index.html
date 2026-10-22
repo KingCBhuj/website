@@ -185,6 +185,32 @@
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
     }
+
+    .social-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .social-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 20px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--card);
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .social-links a:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
   </style>
 </head>
 
@@ -197,6 +223,7 @@
         <a href="#about">About</a>
         <a href="#interests">Interests</a>
         <a href="#writing">Writing</a>
+        <a href="#socials">Socials</a>
       </nav>
     </header>
 
@@ -268,6 +295,17 @@
         <div class="note">
           This space is taking shape. I'll be adding my writing,
           observations, and interesting finds here.
+        </div>
+      </section>
+
+      <section id="socials">
+        <h2>Find me online</h2>
+        <p class="about-copy">Follow along, connect, or say hello.</p>
+        <div class="social-links">
+          <a href="https://www.instagram.com/chiragschande/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+          <a href="https://www.linkedin.com/in/chiragschande/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+          <a href="https://x.com/chiragchande" target="_blank" rel="noopener noreferrer">X / Twitter ↗</a>
+          <a href="https://www.facebook.com/chiragchande/" target="_blank" rel="noopener noreferrer">Facebook ↗</a>
         </div>
       </section>
     </main>
