@@ -1,0 +1,19 @@
+{
+  "id": "/utopia/wall/",
+  "name": "Utopia Wall",
+  "short_name": "Wall",
+  "description": "A shared white wall where anyone can pin sticky notes, tagged by topic.",
+  "start_url": "/utopia/wall/",
+  "scope": "/utopia/wall/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#36552c",
+  "icons": [
+    {
+      "src": "/utopia/wall/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
