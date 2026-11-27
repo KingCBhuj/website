@@ -1,16 +1,16 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Wall — Utopia</title><meta name="description" content="A shared white wall for Utopia. Pin sticky notes and draw, tagged by topic."><style>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Wall — Utopia</title><meta name="description" content="A shared white wall for Utopia. Pin sticky notes, tagged by topic."><style>
 *{box-sizing:border-box}[hidden]{display:none!important}html,body{height:100%;margin:0}body{display:flex;flex-direction:column;background:#fff;color:#252920;font:15px/1.4 system-ui,sans-serif}
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 12px;border-bottom:1px solid #e5e2d8;background:#fff}.bar a{color:#36552c;text-decoration:none;margin-right:6px}
-.bar select,.bar input,.bar button{font:14px system-ui,sans-serif;padding:7px 10px;border:1px solid #b9beae;border-radius:8px;background:#fff;color:#252920}.bar button{cursor:pointer;border-radius:20px}.bar button[aria-pressed=true]{background:#36552c;color:#fff;border-color:#36552c}.bar input[type=color]{padding:2px;width:42px;height:34px}.bar input[type=text]{width:140px}.bar label{font-size:12px;color:#606458}
+.bar select,.bar input{font:14px system-ui,sans-serif;padding:7px 10px;border:1px solid #b9beae;border-radius:8px;background:#fff;color:#252920}.bar input[type=text]{width:140px}.bar label{font-size:12px;color:#606458}
 #info{margin:0;padding:4px 12px;font-size:12px;color:#606458}#msg{margin:0;padding:0 12px 4px;font-size:13px;color:#606458;min-height:22px}
-#scroll{flex:1;overflow:auto;background:#fff}#stage{position:relative}#wall{display:block;background:#fff}#wall.draw{touch-action:none;cursor:crosshair}#wall.note{touch-action:manipulation;cursor:copy}
+#scroll{flex:1;overflow:auto;background:#fff}#stage{position:relative}#wall{display:block;background:#fff;touch-action:manipulation;cursor:copy}
 .ed{position:absolute;border:0;padding:10px;font:17px/1.3 Georgia,serif;resize:none;box-shadow:0 6px 14px rgba(0,0,0,.18);color:#2b2b24;z-index:2}
-a:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,#wall:focus-visible{outline:3px solid #a56b14;outline-offset:2px}
+a:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible,#wall:focus-visible{outline:3px solid #a56b14;outline-offset:2px}
 </style></head><body>
-<div class="bar" role="toolbar" aria-label="Wall tools"><a href="/utopia/">← Utopia</a><button type="button" id="b-note" aria-pressed="true">Sticky note</button><button type="button" id="b-draw" aria-pressed="false">Draw</button><select id="c-note" aria-label="Note colour"></select><input type="color" id="c-pen" value="#252920" aria-label="Pen colour" hidden><select id="s-pen" aria-label="Pen size" hidden><option value="3">Thin</option><option value="6" selected>Medium</option><option value="12">Thick</option></select><label for="f-topic">Topic</label><select id="f-topic"></select><label for="f-name">Name</label><input type="text" id="f-name" maxlength="40" placeholder="Anonymous" autocomplete="nickname"><label for="f-show">Show</label><select id="f-show"></select></div>
-<p id="info">Tap anywhere on the wall to pin a sticky note, or switch to Draw. Everything is public and cannot be edited by visitors, so please do not share personal details. To request removal, message Chirag Chande.</p><p id="msg" role="status"></p>
-<div id="scroll"><div id="stage"><canvas id="wall" class="note" width="3200" height="1800" tabindex="0" aria-label="Shared wall. Tap to pin a sticky note, or press Enter to add one."></canvas></div></div>
+<div class="bar" role="toolbar" aria-label="Wall tools"><a href="/utopia/">← Utopia</a><label for="c-note">Note colour</label><select id="c-note"></select><label for="f-topic">Topic</label><select id="f-topic"></select><label for="f-name">Name</label><input type="text" id="f-name" maxlength="40" placeholder="Anonymous" autocomplete="nickname"><label for="f-show">Show</label><select id="f-show"></select></div>
+<p id="info">Tap anywhere on the wall to pin a sticky note. Everything is public and cannot be edited by visitors, so please do not share personal details. To request removal, message Chirag Chande.</p><p id="msg" role="status"></p>
+<div id="scroll"><div id="stage"><canvas id="wall" width="3200" height="1800" tabindex="0" aria-label="Shared wall. Tap to pin a sticky note, or press Enter to add one."></canvas></div></div>
 <script>
 (function(){
 var BASE='https://uleatcvnmsibdjybrmwo.supabase.co/rest/v1/board_items',KEY='sb_publishable_hJeg6_Rn-PmHSlxDpFnTbg_G7zjbitJ';
@@ -20,7 +20,7 @@ var COLORS=['#fff3a8','#ffd6e0','#d4ecff','#d9f2c9','#ffe2b8'],CNAMES=['Yellow',
 var W=1600,HT=900,NW=190,NH=160;
 function $(i){return document.getElementById(i)}
 var cv=$('wall'),ctx=cv.getContext('2d'),stage=$('stage'),sc=$('scroll');
-var items=[],seen={},pending=[],lastTs=null,first=true,busy=false,drawing=false,cur=null,tool='note',scale=1,ed=null,edWas=false,lastPost=0;
+var items=[],seen={},pending=[],lastTs=null,first=true,busy=false,scale=1,ed=null,edWas=false,lastPost=0;
 function loadPrefs(){try{var p=JSON.parse(localStorage.getItem('utopia_wall'));if(p&&TOPICS.indexOf(p.topic)>-1)return{topic:p.topic,name:String(p.name||'').slice(0,40),show:TOPICS.indexOf(p.show)>-1?p.show:''}}catch(e){}return{topic:'Something else',name:'',show:''}}
 var prefs=loadPrefs();
 function savePrefs(){try{localStorage.setItem('utopia_wall',JSON.stringify(prefs))}catch(e){}}
@@ -44,25 +44,20 @@ function drawText(it){var d=it.data;if(!d)return;ctx.fillStyle=d.c;ctx.font=Math
 function redraw(){setT();ctx.fillStyle='#fff';ctx.fillRect(0,0,W,HT);var show=prefs.show,list=items.concat(pending).filter(function(it){return !show||it.topic===show});if(!list.length){ctx.font='22px Georgia,serif';ctx.fillStyle='#b3b6a8';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(show?'Nothing here yet for this topic.':'Tap anywhere to pin the first sticky note.',W/2,HT/2);ctx.textAlign='left'}list.forEach(function(it){if(it.kind==='note')drawNote(it);else if(it.kind==='stroke')drawStroke(it);else if(it.kind==='text')drawText(it)})}
 function addRows(rows){var ch=false;rows.forEach(function(r){if(!r||seen[r.id])return;seen[r.id]=1;items.push(r);ch=true;if(!lastTs||r.created_at>lastTs)lastTs=r.created_at});return ch}
 function load(){if(busy)return;busy=true;var q=lastTs?'&created_at=gt.'+encodeURIComponent(lastTs)+'&order=created_at.asc&limit=100':'&order=created_at.desc&limit=300';
-fetch(BASE+'?select=id,topic,name,kind,data,created_at'+q,{headers:H}).then(function(r){if(!r.ok)throw new Error();return r.json()}).then(function(rows){var fresh=!lastTs;if(fresh)rows.reverse();var ch=addRows(rows);if((ch||first)&&!drawing)redraw();first=false;msg('')}).catch(function(){msg('Could not refresh the wall. Retrying...')}).then(function(){busy=false})}
+fetch(BASE+'?select=id,topic,name,kind,data,created_at'+q,{headers:H}).then(function(r){if(!r.ok)throw new Error();return r.json()}).then(function(rows){var fresh=!lastTs;if(fresh)rows.reverse();var ch=addRows(rows);if(ch||first)redraw();first=false;msg('')}).catch(function(){msg('Could not refresh the wall. Retrying...')}).then(function(){busy=false})}
 function send(kind,data){var now=Date.now();if(now-lastPost<300)return;lastPost=now;var p={kind:kind,data:data,topic:prefs.topic,name:prefs.name};pending.push(p);redraw();
 fetch(BASE,{method:'POST',headers:Object.assign({Prefer:'return=representation'},H),body:JSON.stringify({topic:p.topic,name:p.name||null,kind:kind,data:data})}).then(function(r){if(!r.ok)throw new Error();return r.json()}).then(function(rows){pending=pending.filter(function(x){return x!==p});addRows(rows);redraw();msg('')}).catch(function(){pending=pending.filter(function(x){return x!==p});redraw();msg('Could not save that. Please try again.')})}
 function openEditor(px,py){if(ed)return;var x=clamp(px-NW/2,0,W-NW),y=clamp(py-NH/2,0,HT-NH),t=document.createElement('textarea'),done=false;t.className='ed';t.maxLength=120;t.setAttribute('aria-label','Write your sticky note. Click outside or press Ctrl+Enter to pin it. Press Escape to cancel.');t.style.left=(x*scale)+'px';t.style.top=(y*scale)+'px';t.style.width=(NW*scale)+'px';t.style.height=(NH*scale)+'px';t.style.background=COLORS[$('c-note').value]||COLORS[0];t.style.fontSize=Math.max(13,17*scale)+'px';stage.appendChild(t);ed=t;setTimeout(function(){t.focus()},0);
 function finish(save){if(done)return;done=true;var v=t.value.trim();t.remove();ed=null;if(save&&v)send('note',{x:Math.round(x),y:Math.round(y),t:v,k:Number($('c-note').value)||0,r:Math.round((Math.random()*6-3)*10)/10})}
 t.addEventListener('keydown',function(e){if(e.key==='Escape'){e.preventDefault();finish(false)}else if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();finish(true)}});t.addEventListener('blur',function(){finish(true)})}
-cv.addEventListener('pointerdown',function(e){edWas=!!ed;if(tool!=='draw')return;e.preventDefault();try{cv.setPointerCapture(e.pointerId)}catch(x){}drawing=true;cur={c:$('c-pen').value,w:Number($('s-pen').value),p:[pt(e)]};setT();drawStroke({data:cur,topic:prefs.topic,name:prefs.name})});
-cv.addEventListener('pointermove',function(e){if(!drawing||!cur)return;var p=pt(e),l=cur.p[cur.p.length-1];if(Math.abs(p[0]-l[0])+Math.abs(p[1]-l[1])<3||cur.p.length>=800)return;cur.p.push(p);penStyle(cur.c,cur.w);ctx.beginPath();ctx.moveTo(l[0],l[1]);ctx.lineTo(p[0],p[1]);ctx.stroke()});
-function endStroke(){if(!drawing)return;drawing=false;var s=cur;cur=null;if(s)send('stroke',s)}
-cv.addEventListener('pointerup',endStroke);cv.addEventListener('pointercancel',endStroke);
-cv.addEventListener('click',function(e){if(tool!=='note')return;if(edWas){edWas=false;return}var p=pt(e);openEditor(p[0],p[1])});
-cv.addEventListener('keydown',function(e){if(e.key==='Enter'&&tool==='note'){e.preventDefault();openEditor(200+Math.random()*(W-400),150+Math.random()*(HT-300))}});
-function setTool(t){tool=t;$('b-note').setAttribute('aria-pressed',t==='note');$('b-draw').setAttribute('aria-pressed',t==='draw');cv.className=t;$('c-note').hidden=t!=='note';$('c-pen').hidden=t!=='draw';$('s-pen').hidden=t!=='draw'}
-$('b-note').onclick=function(){setTool('note')};$('b-draw').onclick=function(){setTool('draw')};
+cv.addEventListener('pointerdown',function(){edWas=!!ed});
+cv.addEventListener('click',function(e){if(edWas){edWas=false;return}var p=pt(e);openEditor(p[0],p[1])});
+cv.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();openEditor(200+Math.random()*(W-400),150+Math.random()*(HT-300))}});
 $('f-topic').addEventListener('change',function(){prefs.topic=this.value;savePrefs()});
 $('f-name').addEventListener('input',function(){prefs.name=this.value.trim().slice(0,40);savePrefs()});
 $('f-show').addEventListener('change',function(){prefs.show=this.value;savePrefs();redraw()});
 window.addEventListener('resize',resize);
-setTool('note');resize();redraw();msg('Loading the wall...');load();
+resize();redraw();msg('Loading the wall...');load();
 setInterval(function(){if(!document.hidden)load()},5000);
 })();
 </script></body></html>
